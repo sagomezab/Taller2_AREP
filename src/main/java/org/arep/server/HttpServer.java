@@ -1,17 +1,17 @@
-package edu.escuelaing.arem.ASE.app;
+package org.arep.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.URL;
+import java.net.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Java server which exposes the movie search services
+ */
 public class HttpServer {
     private static HttpServer _instance = new HttpServer();
     private Map<String, RESTService> services = new HashMap<>();
@@ -21,7 +21,7 @@ public class HttpServer {
         return _instance;
     }
     private static final String USER_AGENT = "Mozilla/5.0";
-    private static final String GET_URL = "https://omdbapi.com/?t=%S&apikey=5ad80bb6";
+    private static final String GET_URL = "https://omdbapi.com/?t=%S&apikey=1d53bda9";
     public static final ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<>();
 
     /**
@@ -69,6 +69,16 @@ public class HttpServer {
                 }
             }
             String requestedMovie = null;
+            //System.out.println("FILE, METHOD: " + request + " " + method);
+            /*if (request.startsWith("/form?") && method.equals("POST")) {
+                requestedMovie = request.replace("/form?s=", "");
+                outputLine = "HTTP/1.1 200 OK\r\n" +
+                        "Content-type: application/json\r\n"+
+                        "\r\n"
+                        + getMovie(requestedMovie.toLowerCase());
+            } else {
+                outputLine = htmlGetForm();
+            }*/
             if (request.startsWith("/apps/")) {
                 outputLine = executeService(request.substring(5));
                 //outputLine = jsonSimple();
